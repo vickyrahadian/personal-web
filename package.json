@@ -4,9 +4,14 @@
   "description": "Vicky Rahadian Firmansyah — Personal Portfolio",
   "main": "backend/server.js",
   "scripts": {
-    "start": "node backend/server.js"
+    "start": "node backend/server.js",
+    "dev": "nodemon --legacy-watch --ignore 'frontend/images/galery/**' --ignore 'data/photo.csv' backend/server.js"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
