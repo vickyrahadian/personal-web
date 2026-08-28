@@ -140,3 +140,5 @@ vite.config.ts.timestamp-*
 
 # Local application data (contacts, gallery metadata, and analytics)
 /data/
+data/*.csv
+data/analytics/*.csv
