@@ -3,6 +3,33 @@ function formatOverviewDate(value) {
   catch { return value; }
 }
 
+function shortVisitorId(value) {
+  const id = String(value || 'anonymous');
+  return id.length > 12 ? `${id.slice(0, 8)}...` : id;
+}
+
+function renderRecentVisitors(visitors) {
+  const body = document.getElementById('recentVisitors');
+  if (!visitors.length) {
+    body.innerHTML = '<tr><td colspan="7" class="overview-muted text-center py-4">No visitor data yet.</td></tr>';
+    return;
+  }
+
+  body.innerHTML = visitors.map(visitor => {
+    const location = [visitor.city, visitor.country].filter(Boolean).join(', ') || visitor.timezone || 'Unknown';
+    const referrer = visitor.last_referrer || 'Direct';
+    return `<tr>
+      <td class="visitor-date">${escapeHtml(formatOverviewDate(visitor.last_seen))}<span class="visitor-meta">First: ${escapeHtml(formatOverviewDate(visitor.first_seen))}</span></td>
+      <td><span class="visitor-id" title="${escapeHtml(visitor.visitor_id)}">${escapeHtml(shortVisitorId(visitor.visitor_id))}</span><details class="visitor-details"><summary>Details</summary><div>IP hash: ${escapeHtml(visitor.ip_hash || 'Unknown')}<br>Session: ${escapeHtml(visitor.last_session_id || 'Unknown')}<br>Event: ${escapeHtml(visitor.last_event || 'Unknown')}</div></details></td>
+      <td><span class="visitor-badge">${escapeHtml(visitor.device || 'Unknown')}</span><span class="visitor-meta">${escapeHtml(visitor.screen_size || 'Unknown')}</span></td>
+      <td>${escapeHtml(visitor.browser || 'Unknown')}<span class="visitor-meta">${escapeHtml(visitor.os || 'Unknown')}</span></td>
+      <td><span class="visitor-value" title="${escapeHtml(location)}">${escapeHtml(location)}</span><span class="visitor-meta">${escapeHtml(visitor.language || 'Unknown')}</span></td>
+      <td><span class="visitor-value" title="${escapeHtml(visitor.last_path || '/')}">${escapeHtml(visitor.last_path || '/')}</span></td>
+      <td><span class="visitor-value" title="${escapeHtml(referrer)}">${escapeHtml(referrer)}</span></td>
+    </tr>`;
+  }).join('');
+}
+
 async function loadOverview() {
   const loading = document.getElementById('overviewLoading');
   const content = document.getElementById('overviewContent');
@@ -26,7 +53,7 @@ async function loadOverview() {
     set('overviewUptime', `${data.health.uptimeSeconds}s`);
     set('overviewMemory', `${data.health.memoryMb} MB`);
     set('overviewNode', data.health.node);
-    document.getElementById('recentVisitors').innerHTML = data.recentVisitors.length ? data.recentVisitors.map(visitor => `<li><span>${escapeHtml(visitor.device || 'Unknown')} · ${escapeHtml(visitor.browser || 'Unknown')}</span><span class="overview-muted">${formatOverviewDate(visitor.last_seen)}</span></li>`).join('') : '<li class="overview-muted">No visitor data yet.</li>';
+    renderRecentVisitors(data.recentVisitors || []);
     document.getElementById('recentContacts').innerHTML = data.recentContacts.length ? data.recentContacts.map(contact => `<li><span>${escapeHtml(contact.name)}</span><span class="overview-muted">${formatOverviewDate(contact.timestamp)}</span></li>`).join('') : '<li class="overview-muted">No contact submissions yet.</li>';
     loading.style.display = 'none';
     content.style.display = 'block';

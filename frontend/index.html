@@ -319,6 +319,14 @@
             <div class="mb-4">
               <textarea class="form-control contact-input" id="contactMessage" rows="5" placeholder="Your Message" required></textarea>
             </div>
+            <div class="mb-3">
+              <label for="captchaAnswer" class="form-label small text-muted" id="captchaQuestion">Loading security question...</label>
+              <input type="text" inputmode="numeric" class="form-control contact-input" id="captchaAnswer" placeholder="Your answer" required />
+            </div>
+            <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;">
+              <label for="website">Leave this field empty</label>
+              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+            </div>
             <div class="text-center">
               <button type="submit" class="btn btn-dark btn-lg px-5" id="submitBtn">
                 <span id="submitText">Send Message</span>

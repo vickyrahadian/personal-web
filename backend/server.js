@@ -9,6 +9,7 @@ const createAnalyticsRouter = require('./features/analytics/analytics.routes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin2026';
+const CONTACT_CAPTCHA_SECRET = process.env.CONTACT_CAPTCHA_SECRET;
 const FRONTEND_DIR = path.join(__dirname, '../frontend');
 const DATA_DIR = path.join(__dirname, '../data');
 const GALLERY_DIR = path.join(FRONTEND_DIR, 'images/galery');
@@ -21,7 +22,7 @@ app.use(express.static(FRONTEND_DIR));
 
 app.use('/api/gallery', createGalleryRouter({ dataDir: DATA_DIR, galleryDir: GALLERY_DIR, isAdmin }));
 app.use('/api/messages', createMessagesRouter({ dataDir: DATA_DIR, isAdmin }));
-app.use('/api/contact', createContactRouter({ dataDir: DATA_DIR }));
+app.use('/api/contact', createContactRouter({ dataDir: DATA_DIR, captchaSecret: CONTACT_CAPTCHA_SECRET }));
 app.use('/api/analytics', createAnalyticsRouter({ dataDir: DATA_DIR, contactsPath: CONTACTS_PATH, analyticsSalt: process.env.ANALYTICS_SALT || 'change-this-analytics-salt', isAdmin }));
 
 app.use((error, req, res, next) => {

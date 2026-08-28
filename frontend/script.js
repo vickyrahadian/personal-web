@@ -28,18 +28,36 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 });
 
 // ── Contact Form ──────────────────────────────────────
+let contactCaptchaToken = '';
+const loadContactCaptcha = async () => {
+  const question = document.getElementById('captchaQuestion');
+  try {
+    const res = await fetch('/api/contact/challenge');
+    if (!res.ok) throw new Error('Captcha unavailable');
+    const data = await res.json();
+    contactCaptchaToken = data.token;
+    question.textContent = data.question;
+  } catch {
+    contactCaptchaToken = '';
+    question.textContent = 'Security question unavailable. Please refresh the page.';
+  }
+};
+loadContactCaptcha();
+
 document.getElementById('contactForm')?.addEventListener('submit', async e => {
   e.preventDefault();
 
   const name    = document.getElementById('contactName').value.trim();
   const email   = document.getElementById('contactEmail').value.trim();
   const message = document.getElementById('contactMessage').value.trim();
+  const captchaAnswer = document.getElementById('captchaAnswer').value.trim();
+  const website = document.getElementById('website').value.trim();
   const feedback = document.getElementById('formFeedback');
   const submitBtn = document.getElementById('submitBtn');
   const submitText = document.getElementById('submitText');
   const spinner = document.getElementById('submitSpinner');
 
-  if (!name || !email || !message) {
+  if (!name || !email || !message || !captchaAnswer || !contactCaptchaToken) {
     feedback.innerHTML = '<span class="text-danger">Please fill in all fields.</span>';
     return;
   }
@@ -54,7 +72,7 @@ document.getElementById('contactForm')?.addEventListener('submit', async e => {
     const res = await fetch('/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, message })
+      body: JSON.stringify({ name, email, message, captchaAnswer, captchaToken: contactCaptchaToken, website })
     });
 
     if (res.ok) {
@@ -62,7 +80,12 @@ document.getElementById('contactForm')?.addEventListener('submit', async e => {
       feedback.innerHTML = '<span class="text-success">Message sent! I\'ll get back to you soon.</span>';
       document.getElementById('contactForm').reset();
     } else {
-      feedback.innerHTML = '<span class="text-danger">Something went wrong. Please try again.</span>';
+      const data = await res.json().catch(() => ({}));
+      feedback.innerHTML = `<span class="text-danger">${data.error || 'Something went wrong. Please try again.'}</span>`;
+      if (res.status === 400) {
+        document.getElementById('captchaAnswer').value = '';
+        loadContactCaptcha();
+      }
     }
   } catch {
     feedback.innerHTML = '<span class="text-danger">Could not connect to server. Please try again later.</span>';

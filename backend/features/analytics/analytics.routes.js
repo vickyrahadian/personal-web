@@ -65,11 +65,31 @@ function createAnalyticsRouter({ dataDir, contactsPath, analyticsSalt, isAdmin }
     const countBy = (items, key) => items.reduce((result, item) => { const value = item[key] || 'Unknown'; result[value] = (result[value] || 0) + 1; return result; }, {});
     const referrers = countBy(traffic.filter(item => item.referrer), 'referrer');
     const topReferrer = Object.entries(referrers).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Direct';
+    const latestTrafficByVisitor = new Map();
+    traffic.forEach(item => {
+      const current = latestTrafficByVisitor.get(item.visitor_id);
+      if (!current || new Date(item.timestamp).getTime() > new Date(current.timestamp).getTime()) {
+        latestTrafficByVisitor.set(item.visitor_id, item);
+      }
+    });
+    const recentVisitors = visitors
+      .sort((a, b) => new Date(b.last_seen) - new Date(a.last_seen))
+      .slice(0, 10)
+      .map(visitor => {
+        const latestTraffic = latestTrafficByVisitor.get(visitor.visitor_id);
+        return {
+          ...visitor,
+          last_path: latestTraffic?.path || '/',
+          last_referrer: latestTraffic?.referrer || '',
+          last_event: latestTraffic?.event || '',
+          last_session_id: latestTraffic?.session_id || ''
+        };
+      });
     const memory = process.memoryUsage();
     res.json({
       traffic: { visitorsToday: new Set(pageviewsToday.map(item => item.visitor_id)).size, pageViewsToday: pageviewsToday.length, visitorsLast7Days: new Set(lastSeven.map(item => item.visitor_id)).size, topReferrer, deviceBreakdown: countBy(pageviewsToday.map(item => ({ device: visitors.find(visitor => visitor.visitor_id === item.visitor_id)?.device || 'Unknown' })), 'device') },
       performance: { averagePageLoad: avg(performance.map(item => item.load_time_ms).filter(Boolean)), samples: performance.length },
-      recentVisitors: visitors.sort((a, b) => new Date(b.last_seen) - new Date(a.last_seen)).slice(0, 5),
+      recentVisitors,
       recentContacts: contacts,
       health: { uptimeSeconds: Math.round(process.uptime()), memoryMb: Math.round(memory.rss / 1024 / 1024), node: process.version, status: 'Online' }
     });

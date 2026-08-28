@@ -242,6 +242,18 @@
     .overview-list li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid #eee; }
     .overview-list li:last-child { border-bottom: 0; }
     .overview-muted { color: #888; }
+    .visitor-table-wrap { overflow-x: auto; border: 1px solid #e0e0e0; background: #fff; }
+    .visitor-table { width: 100%; min-width: 980px; border-collapse: collapse; font-size: 0.78rem; }
+    .visitor-table th { padding: 11px 12px; background: #f7f7f7; color: #777; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.55px; text-align: left; text-transform: uppercase; white-space: nowrap; }
+    .visitor-table td { padding: 12px; border-top: 1px solid #eee; color: #333; vertical-align: top; }
+    .visitor-table tbody tr:hover { background: #fafafa; }
+    .visitor-table .visitor-date { white-space: nowrap; }
+    .visitor-table .visitor-meta { display: block; margin-top: 3px; color: #888; font-size: 0.7rem; }
+    .visitor-table .visitor-value { display: block; max-width: 210px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .visitor-id { font-family: Consolas, monospace; }
+    .visitor-badge { display: inline-block; padding: 3px 8px; border-radius: 999px; background: #ededed; color: #444; font-size: 0.68rem; font-weight: 700; text-transform: capitalize; }
+    .visitor-details summary { color: #555; cursor: pointer; font-size: 0.7rem; }
+    .visitor-details div { margin-top: 5px; color: #888; font-size: 0.68rem; line-height: 1.5; }
     .health-online { color: #218739; font-weight: 700; }
 
     .gallery-toolbar {
@@ -484,7 +496,16 @@
                 <div class="col-lg-6"><div class="overview-section"><h3>Traffic details</h3><ul class="overview-list"><li><span>Top referrer</span><strong id="overviewReferrer">Direct</strong></li><li><span>Desktop</span><strong id="overviewDesktop">0</strong></li><li><span>Mobile</span><strong id="overviewMobile">0</strong></li><li><span>Tablet</span><strong id="overviewTablet">0</strong></li></ul></div></div>
                 <div class="col-lg-6"><div class="overview-section"><h3>API / server health</h3><ul class="overview-list"><li><span>Status</span><strong class="health-online" id="overviewHealth">Online</strong></li><li><span>Uptime</span><strong id="overviewUptime">0s</strong></li><li><span>Memory</span><strong id="overviewMemory">0 MB</strong></li><li><span>Node.js</span><strong id="overviewNode">-</strong></li></ul></div></div>
               </div>
-              <div class="row g-3"><div class="col-lg-6"><div class="overview-section"><h3>Recent visitors</h3><ul class="overview-list" id="recentVisitors"></ul></div></div><div class="col-lg-6"><div class="overview-section"><h3>Recent contact submissions</h3><ul class="overview-list" id="recentContacts"></ul></div></div></div>
+              <div class="overview-section">
+                <h3>Latest Visitor Details</h3>
+                <div class="visitor-table-wrap">
+                  <table class="visitor-table">
+                    <thead><tr><th>Last seen</th><th>Visitor</th><th>Device</th><th>Browser / OS</th><th>Location</th><th>Last page</th><th>Referrer</th></tr></thead>
+                    <tbody id="recentVisitors"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="row g-3"><div class="col-lg-6"><div class="overview-section"><h3>Recent contact submissions</h3><ul class="overview-list" id="recentContacts"></ul></div></div></div>
             </div>
           </div>
         </div>
