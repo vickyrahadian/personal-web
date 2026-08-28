@@ -97,6 +97,16 @@ document.getElementById('contactForm')?.addEventListener('submit', async e => {
 });
 
 // ── Fade-in on scroll ─────────────────────────────────
+// Track outbound social profile clicks from the hero and footer.
+document.querySelectorAll('[data-social]').forEach(link => {
+  link.addEventListener('click', () => {
+    window.trackAnalyticsEvent?.('social_click', {
+      platform: link.dataset.social,
+      location: link.dataset.socialLocation
+    });
+  });
+});
+
 const observer = new IntersectionObserver(
   entries => {
     entries.forEach(entry => {

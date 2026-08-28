@@ -153,6 +153,41 @@ body {
   transform: translateY(-2px);
 }
 
+.hero-socials {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.hero-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255,255,255,0.45);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1.15rem;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.hero-social-link:hover,
+.hero-social-link:focus-visible {
+  background: #fff;
+  border-color: #fff;
+  color: #111;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+}
+
+.hero-social-link:focus-visible {
+  outline: 3px solid rgba(255,255,255,0.5);
+  outline-offset: 3px;
+}
+
 /* ── Section Titles ─────────────────────────────────── */
 .section-title {
   font-size: 1.75rem;

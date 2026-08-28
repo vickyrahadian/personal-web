@@ -168,7 +168,7 @@ Directory/file yang tidak didokumentasikan satu per satu: `.git/` (database vers
 - Konten About, Experience, Projects, Skills, Gallery, Contact.
 - Animasi section ketika masuk viewport.
 - Layout responsive untuk desktop dan mobile.
-- Social link LinkedIn, Instagram, dan GitHub.
+- Social link Instagram, LinkedIn, GitHub, dan YouTube tersedia di Hero dan footer; kliknya direkam sebagai event analytics `social_click` beserta platform dan lokasi link.
 
 ### 5.2 Galeri
 
