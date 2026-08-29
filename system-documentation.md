@@ -164,7 +164,7 @@ Directory/file yang tidak didokumentasikan satu per satu: `.git/` (database vers
 ### 5.1 Portfolio publik
 
 - Navigasi fixed dan smooth scroll ke setiap section.
-- Hero dengan foto profil dan call-to-action.
+- Hero dengan foto profil grayscale yang berubah berwarna saat hover, call-to-action, dan link akun sosial.
 - Konten About, Experience, Projects, Skills, Gallery, Contact.
 - Animasi section ketika masuk viewport.
 - Layout responsive untuk desktop dan mobile.
